@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load post_filter %}
+{% load static %}
+{% block content %}
+<style>
+    .gradient-background {
+    background: radial-gradient(circle at center, #fefdee 3%, #ffffff 97%);
+    border-radius: 10px; /* 선택적으로 모서리를 둥글게 */
+    
+}
+.transparent-card {
+    background-color: transparent; /* 배경을 투명하게 */
+    border: none; /* 테두리도 없애려면 추가 */
+}
+.transparent-list .list-group-item {
+    background-color: transparent; /* 배경색을 투명하게 */
+    border: none; /* 테두리 제거 */
+}
+.fixed-size {
+    height: 100px; /* 높이 고정 */
+    resize: none; /* 크기 조절 비활성화 */
+}
+
+</style>
+<div class="container my-3 gradient-background ">
+    <!-- 메시지 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+        {% for message in messages %}
+            <strong>{{ message.tags }}</strong>
+            <ul><li>{{ message.message }}</li></ul>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 질문 -->
+
+    <div class="d-flex align-items-center gap-2 ">
+        <!-- 이미지 -->
+        <img class="mb-0 mt-2" src="{% static 'logo.png' %}" alt="Logo" style="width: 40px; height: 40px;">
+        <!-- 제목 -->
+        <h2 class="mb-0 p-2 mt-2">{{ question.subject }}</h2>
+    </div>
+    <div class="d-flex justify-content-start border-bottom py-2">
+                    
+                    <div class="badge text-dark p-2 text-start mb-2">
+                        <div class="mb-2">{{ question.author.username }}</div>
+                        <div class="text-black-50">{{ question.create_date }}</div>
+                    </div>
+                    <!-- 수정 일시 표시  -->
+                    {% if question.modify_date %}
+                    <div class="badge bg-light text-dark p-2 text-start mx-3">
+                        <div class="mb-2">수정: </div>
+                        <div>{{ question.modify_date }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+    <!-- 글 -->
+    <div class="card my-3  border-0 transparent-card" >
+        <div class="card-body ">
+            <div class="card-text" >{{ question.content|mark }}</div>
+
+                
+            <!-- 드롭다운 선택 값 출력 -->
+            <ul class="list-group my-3 transparent-list ">
+                <li class="list-group-item border-0 "><strong class="badge bg-info text-dark bg-opacity-50 me-3">목표 설정 </strong> {{ question.get_target_display }}</li>
+                <li class="list-group-item border-0 "><strong class="badge bg-info text-dark bg-opacity-50 me-3">희망 언어 </strong> {{ question.get_desired_language_display }}</li>
+                <li class="list-group-item border-0 "><strong class="badge bg-info text-dark bg-opacity-50 me-3">희망 요일 </strong> {{ question.get_preferred_day_display }}</li>
+                <li class="list-group-item border-0 "><strong class="badge bg-info text-dark bg-opacity-50 me-3">희망 시간 </strong> {{ question.get_preferred_time_display }}</li>
+                <li class="list-group-item border-0 "><strong class="badge bg-info text-dark bg-opacity-50 me-3">온 / 오프 </strong> {{ question.get_online_offline_display }}</li>
+                <li class="list-group-item border-0 "><strong class="badge bg-info text-dark bg-opacity-50 me-3">희망 장소 </strong> {{ question.get_location_display }}</li>
+                <li class="list-group-item border-0 "><strong class="badge bg-info text-dark bg-opacity-50 me-3">연락 수단 </strong> {{ question.get_contact_method_display }}</li>
+                
+            </ul>
+            
+            <div class="my-3">
+                {% if request.user == question.author %}
+                <a href="{% url 'post:question_modify' question.id %}"
+                class="btn btn-sm bg-info text-dark bg-opacity-10 ">수정</a>
+                <a href="javascript:void(0)" class="delete btn btn-sm bg-info text-dark bg-opacity-10"
+                data-uri="{% url 'post:question_delete' question.id %}">삭제</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- 답변 -->
+    <h6 class="border-bottom my-3 py-2">{{question.answer_set.count}}개의 답변이 있습니다.</h6>
+    {% for answer in question.answer_set.all %}
+    <a href="answer_{{ answer.id }}"></a>
+    <div class="card my-3">
+        <div class="card-body">
+            
+            <div class="d-flex justify-content-end">
+                <!-- 수정 일시 표시 -->
+                {% if answer.modify_date %}
+                <div class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">수정:</div>
+                    <div>{{ answer.modify_date }}</div>
+                </div>
+                {% endif %}
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">{{ answer.author.username }}</div>
+                    <div>{{ answer.create_date }}</div>
+                </div>
+                <!-- 글 작성자인 경우에만 "초대 보내기" 버튼 표시 -->
+                {% if request.user == question.author %}
+                <button 
+                    class="m-1 send-invite-btn badge bg-info border-0" 
+                    data-question-id="{{ question.id }}" 
+                    data-comment-id="{{ answer.id }}">초대 메일 전송</button>
+                {% endif %}
+            </div>
+            <div class="card-text " >{{ answer.content|mark }}</div>
+            <div class="my-3">
+                {% if request.user == answer.author %}
+                <a href="{% url 'post:answer_modify' answer.id %}"
+                class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-secondary"
+                data-uri="{% url 'post:answer_delete' answer.id %}">삭제</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- 답변 등록 -->
+    <form action="{% url 'post:answer_create' question.id %}" method="post" class="my-3">
+        {% csrf_token %}
+            <!-- 보안 관련 항목: POST 요청 시 csrf_token이 없으면 오류내는 장고 특징-->
+             <!-- 오류표시 Start -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            <div>
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 오류표시 End -->
+        <div class="mb-3">
+            <label for="content" class="form-label">답변 내용</label>
+            <textarea {% if not user.is_authenticated %}disabled{% endif %}
+              name="content" id="content" class="form-control fixed-size" rows="5"></textarea>
+        </div>
+        <input type="submit" value="답변 등록" class="btn btn-info text-white">
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<!-- 질문 삭제에 대한 자바스크립트 -->
+<script type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if(confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+
+    document.querySelectorAll('.send-invite-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const questionId = button.dataset.questionId;
+            const commentId = button.dataset.commentId;
+            const url = `/send-calendar-info/${questionId}/${commentId}/`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => alert(data.message || data.error))
+                .catch(error => console.error('에러 발생:', error));
+        });
+    });
+    </script>
+{% endblock %}

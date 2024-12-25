@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    ul li::marker {
+      color: #f0f4f9;  /* 불릿의 색상 */
+      font-size: 1.5rem; /* 불릿의 크기 (선택 사항) */
+      font-weight: bold; /* 불릿의 두께 (선택 사항) */
+    }
+  </style>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+
+    <!-- 캘린더 박스 -->
+    <div style="background-color: #f0f4f9; width: 100%; max-width: 800px; margin-top: 30px; margin-bottom: 30px; border: 1px solid #f4f4f4; padding: 3%; border-radius: 10px; overflow: hidden;">
+        <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0;">
+            <iframe 
+            src="{{ calendar_url }}" 
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; border-radius: 10px;"
+            scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <!-- 어학 시험 리스트 박스 -->
+    <div style="width: 100%; max-width: 800px; border: 1px solid #ccc; border-radius: 10px; padding: 20px;">
+        <h6>어학 시험</h6>
+        {% if events %}
+            <ul>
+                {% for event in events %}
+                    <li>
+                        {{ event.summary }} - {{ event.start_time }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>다가오는 이벤트가 없습니다.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

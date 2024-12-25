@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}융합 마이크로 전공 시간표{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">융합 마이크로 전공 시간표</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>전공</th>
+                    <th>트랙</th>
+                    <th>과목</th>
+                    <th>시간</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="6" class="align-middle fw-bold">융합 마이크로 전공</td>
+                    <td rowspan="2" class="fw-bold">글로벌 영어트랙</td>
+                    <td>비즈니스영어기초</td>
+                    <td>수 6~8</td>
+                </tr>
+                <tr>
+                    <td>비즈니스영어기초</td>
+                    <td>금 6~8</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="fw-bold">글로벌 일본어트랙</td>
+                    <td>일본어스텝1</td>
+                    <td>수 6~8</td>
+                </tr>
+                <tr>
+                    <td>일본어초급독해</td>
+                    <td>수 6~8</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="fw-bold">글로벌 중국어트랙</td>
+                    <td>중국어 첫걸음</td>
+                    <td>수 6~8</td>
+                </tr>
+                <tr>
+                    <td>생활 중국어</td>
+                    <td>금 6~8</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
