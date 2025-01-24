@@ -1,11 +1,11 @@
-config/
+# sql 
+output.sql 
+mycapstone/db.sqlite3
 
-capstoneProject/mycapstone/api/auth.py 
-
-capstoneProject/mycapstone/api/views/api_views.py
-capstoneProject/mycapstone/api/views/auth_views.py
-
-capstoneProject/mycapstone/api/token.pickle
-capstoneProject/mycapstone/api/exam_schedule.csv
-db.sqlite3
-output.sql
+# api 
+mycapstone/api/views/api_views.py
+mycapstone/api/views/auth_views.py
+mycapstone/api/credentials.json
+mycapstone/api/exam_schedule.csv 
+mycapstone/api/auth.py 
+mycapstone/api/token.pickle 
