@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load post_filter %}
 {% block content %}
+
 <div class="container my-3">
     <!-- 검색 창 -->
     <div class="row my-3">
         <div class="col-6">
-            <a href="{% url 'post:question_create' %}" class="btn btn-warning text-white">질문 등록하기</a>
+            <a href="{% url 'post:question_create' %}" class="btn text-white" style="background-color: rgb(134, 228, 243);">질문 등록하기</a>
         </div>
         <div class="col-6">
             <div class="input-group">
@@ -16,9 +17,9 @@
             </div>
         </div>
     </div>
-    <table class="table ">
+    <table class="table table-hover">
         <thead>
-        <tr class="table-warning">
+        <tr class="table-light">
             <th>번호</th>
             <th style="width:50%">제목</th>
             <th>글쓴이</th>
