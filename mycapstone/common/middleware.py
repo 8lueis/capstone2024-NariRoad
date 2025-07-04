@@ -1,6 +1,9 @@
 from .utils import assign_group
 import random
 
+# 모든 요청을 처리할 때 자동으로 실행 
+# how? settings.py > 미들웨어 등록
+# 사용: request.session["ab_group"]
 class ABTestMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
